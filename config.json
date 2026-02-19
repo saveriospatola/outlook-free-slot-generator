@@ -1,35 +1,76 @@
 {
-    "CalendarsToRead": [
-        "name.surname@mycompany1.com",
-        "name.surname@mycompany2.com"
-    ],
-    "WorkingHours": {
-        "Start": 9,
-        "End": 18
+  "WorkingHours": {
+    "Start": 9,
+    "End": 18
+  },
+  "LunchBreak": {
+    "Start": 13,
+    "End": 14
+  },
+  "CalendarsToRead": [
+    "your.email@example.com",
+    "secondary.email@domain.com"
+  ],
+  "Preferences": {
+    "DaysForward": 5,
+    "MinSlotDurationMinutes": 30,
+    "SelectedTheme": "Grey"
+  },
+  "ColorThemes": {
+    "Grey": {
+      "HeaderBg": "#4b5563",
+      "HeaderText": "#ffffff",
+      "BadgeBg": "#f3f4f6",
+      "BadgeText": "#374151",
+      "BadgeBorder": "#e5e7eb",
+      "RowAlt": "#f9fafb"
     },
-    "LunchBreak": {
-        "Start": 13,
-        "End": 14
+    "Blue": {
+      "HeaderBg": "#1e40af",
+      "HeaderText": "#ffffff",
+      "BadgeBg": "#eff6ff",
+      "BadgeText": "#1e40af",
+      "BadgeBorder": "#dbeafe",
+      "RowAlt": "#f8fafc"
     },
-    "Preferences": {
-        "DaysForward": 5,
-        "MinSlotDurationMinutes": 30,
-        "TableHeaderColor": "#2563eb",
-        "RowAlternateColor": "#f8fafc"
+    "Green": {
+      "HeaderBg": "#065f46",
+      "HeaderText": "#ffffff",
+      "BadgeBg": "#f0fdf4",
+      "BadgeText": "#166534",
+      "BadgeBorder": "#dcfce7",
+      "RowAlt": "#f9fafb"
     },
-    "Localization": {
-        "MailSubject": "Availability for the upcoming days",
-        "Greeting": "Hi,",
-        "IntroText": "please find my availability below.",
-        "IntroTextList": "please find some of my availability below:",
-        "TableHeaderDay": "DAY",
-        "TableHeaderAvailability": "AVAILABILITY",
-        "FromTimeText": "from ",
-        "ToTimeText": " to ",
-        "InPoiText": " onwards",
-        "OrText": " or ",
-        "EndOfDaySuffix": "> End of day",
-        "Closing": "Best regards,<br>S.",
-        "Culture": "en-US"
+    "Purple": {
+      "HeaderBg": "#5b21b6",
+      "HeaderText": "#ffffff",
+      "BadgeBg": "#f5f3ff",
+      "BadgeText": "#5b21b6",
+      "BadgeBorder": "#ede9fe",
+      "RowAlt": "#fafafa"
+    },
+    "Orange": {
+      "HeaderBg": "#9a3412",
+      "HeaderText": "#ffffff",
+      "BadgeBg": "#fff7ed",
+      "BadgeText": "#9a3412",
+      "BadgeBorder": "#ffedd5",
+      "RowAlt": "#fffcf9"
     }
+  },
+  "Localization": {
+    "Culture": "en-US",
+    "MailSubject": "My Availabilities",
+    "Greeting": "Hi,",
+    "IntroText": "Please find my availabilities for a meeting below:",
+    "IntroTextList": "Here are the slots when I am available:",
+    "TableHeaderDay": "Day",
+    "TableHeaderAvailability": "Availability",
+    "EndOfDaySuffix": "onwards",
+    "FromTimeText": "from ",
+    "ToTimeText": " to ",
+    "InPoiText": " onwards",
+    "OrText": " or ",
+    "Closing": "Best regards,"
+  }
 }
