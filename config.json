@@ -1,0 +1,35 @@
+{
+    "CalendarsToRead": [
+        "name.surname@mycompany1.com",
+        "name.surname@mycompany2.com"
+    ],
+    "WorkingHours": {
+        "Start": 9,
+        "End": 18
+    },
+    "LunchBreak": {
+        "Start": 13,
+        "End": 14
+    },
+    "Preferences": {
+        "DaysForward": 5,
+        "MinSlotDurationMinutes": 30,
+        "TableHeaderColor": "#2563eb",
+        "RowAlternateColor": "#f8fafc"
+    },
+    "Localization": {
+        "MailSubject": "Availability for the upcoming days",
+        "Greeting": "Hi,",
+        "IntroText": "please find my availability below.",
+        "IntroTextList": "please find some of my availability below:",
+        "TableHeaderDay": "DAY",
+        "TableHeaderAvailability": "AVAILABILITY",
+        "FromTimeText": "from ",
+        "ToTimeText": " to ",
+        "InPoiText": " onwards",
+        "OrText": " or ",
+        "EndOfDaySuffix": "> End of day",
+        "Closing": "Best regards,<br>S.",
+        "Culture": "en-US"
+    }
+}
