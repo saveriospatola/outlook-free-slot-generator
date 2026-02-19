@@ -8,13 +8,17 @@
     "End": 14
   },
   "CalendarsToRead": [
-    "your.email@example.com",
-    "secondary.email@domain.com"
+    "your.name@company.com",
+    "personal.email@provider.com"
   ],
   "Preferences": {
     "DaysForward": 5,
     "MinSlotDurationMinutes": 30,
-    "SelectedTheme": "Grey"
+    "SelectedTheme": "Grey",
+    "RowAlternateColor": "#f9fafb",
+    "TableHeaderColor": "#4b5563",
+    "FontName": "Segoe UI, Calibri, Arial, sans-serif",
+    "FontSize": "11pt"
   },
   "ColorThemes": {
     "Grey": {
@@ -60,10 +64,10 @@
   },
   "Localization": {
     "Culture": "en-US",
-    "MailSubject": "My Availabilities",
+    "MailSubject": "My Availability",
     "Greeting": "Hi,",
-    "IntroText": "Please find my availabilities for a meeting below:",
-    "IntroTextList": "Here are the slots when I am available:",
+    "IntroText": "Please find below my availability for a meeting:",
+    "IntroTextList": "I am available during the following slots:",
     "TableHeaderDay": "Day",
     "TableHeaderAvailability": "Availability",
     "EndOfDaySuffix": "onwards",
@@ -71,6 +75,6 @@
     "ToTimeText": " to ",
     "InPoiText": " onwards",
     "OrText": " or ",
-    "Closing": "Best regards,"
+    "Closing": "Best regards,<br/>[Your Name]"
   }
 }
