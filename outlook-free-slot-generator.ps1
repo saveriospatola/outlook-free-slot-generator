@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Genera le disponibilità Outlook in formato Tabella HTML o Elenco Testuale.
+    Genera le disponibilità Outlook con temi di colore selezionabili da config.json.
 #>
 Param(
     [ValidateSet("Tabella", "Testo")]
@@ -17,6 +17,11 @@ $config = Get-Content $configPath -Encoding UTF8 | ConvertFrom-Json
 $txt = $config.Localization
 $culture = [System.Globalization.CultureInfo]::GetCultureInfo($txt.Culture)
 
+# Selezione del Tema
+$themeName = $config.Preferences.SelectedTheme
+$theme = $config.ColorThemes.$themeName
+if (-not $theme) { $theme = $config.ColorThemes.Grigio } # Fallback se il nome non esiste
+
 # ---- 2. OUTLOOK ----
 try {
     $outlook = New-Object -ComObject Outlook.Application
@@ -27,7 +32,7 @@ try {
 }
 $today = Get-Date
 
-# ---- 3. FUNZIONI ----
+# ---- 3. FUNZIONI (Logica Originale) ----
 function Round-Up5($date) {
     $minutes = [math]::Ceiling($date.Minute / 5) * 5
     if ($minutes -eq 60) { return [datetime]::new($date.Year, $date.Month, $date.Day, $date.Hour, 0, 0).AddHours(1) }
@@ -113,26 +118,48 @@ while ($workdaysAdded -lt ($config.Preferences.DaysForward + 1)) {
     if ($valid) { $daysProcessed += [PSCustomObject]@{ Day = $day; Slots = $valid } }
 }
 
-# ---- 5. OUTPUT ----
+# ---- 5. OUTPUT (DINAMICO) ----
+$htmlHeader = "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>"
 $mailBody = ""
+
 if ($Formato -eq "Tabella") {
     $rows = ""
     $count = 0
     foreach ($d in $daysProcessed) {
         $dayStrRaw = $d.Day.ToString("dddd dd/MM", $culture)
         $dayStr = $dayStrRaw.Substring(0,1).ToUpper() + $dayStrRaw.Substring(1)
+        
         $badges = foreach ($s in $d.Slots) {
             $tS = $s.Start.ToString("HH:mm")
             $range = if ($s.End -ge $d.Day.AddHours($config.WorkingHours.End)) { "$tS $($txt.EndOfDaySuffix)" } else { "$tS - $($s.End.ToString('HH:mm'))" }
-            "<span style='display:inline-block;background:#eff6ff;color:#1d4ed8;border:1px solid #dbeafe;padding:3px 10px;border-radius:6px;margin:2px;font-size:12px;font-weight:600;'>$range</span>"
+            "<span style='display:inline-block;background:$($theme.BadgeBg);color:$($theme.BadgeText);border:1px solid $($theme.BadgeBorder);padding:3px 10px;border-radius:6px;margin:2px;font-size:12px;font-weight:600;'>$range</span>"
         }
-        $bg = if ($count++ % 2 -eq 0) { "#ffffff" } else { $config.Preferences.RowAlternateColor }
-        # CORREZIONE: Uso ${dayStr} per evitare errori con i due punti
-        $rows += "<tr style='background:$bg;'><td style='padding:6px 15px;font-weight:bold;border-bottom:1px solid #e2e8f0;'>${dayStr}</td><td style='padding:6px 15px;border-bottom:1px solid #e2e8f0;'>$($badges -join ' ')</td></tr>"
+        
+        $bg = if ($count++ % 2 -eq 0) { "#ffffff" } else { $theme.RowAlt }
+        $rows += "<tr style='background:$bg;'><td style='padding:8px 15px;font-weight:bold;border-bottom:1px solid #e2e8f0;color:#374151;'>${dayStr}</td><td style='padding:8px 15px;border-bottom:1px solid #e2e8f0;'>$($badges -join ' ')</td></tr>"
     }
-    $mailBody = "<div style='font-family:Segoe UI,sans-serif;'><p>$($txt.Greeting)</p><p>$($txt.IntroText)</p><table style='border-collapse:collapse;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;'><thead><tr style='background:$($config.Preferences.TableHeaderColor);color:white;'><th style='padding:6px 15px;'>$($txt.TableHeaderDay)</th><th style='padding:6px 15px;'>$($txt.TableHeaderAvailability)</th></tr></thead><tbody>$rows</tbody></table><p>$($txt.Closing)</p></div>"
+
+    $mailBody = @"
+    $htmlHeader
+    <div style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:#111827; max-width:650px;">
+        <p>$($txt.Greeting)</p>
+        <p>$($txt.IntroText)</p>
+        <table style="border-collapse:collapse; border:1px solid #e2e8f0; border-radius:8px; overflow:hidden; min-width:400px;">
+            <thead>
+                <tr style="background:$($theme.HeaderBg); color:$($theme.HeaderText);">
+                    <th style="padding:10px 15px; text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:0.05em;">$($txt.TableHeaderDay)</th>
+                    <th style="padding:10px 15px; text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:0.05em;">$($txt.TableHeaderAvailability)</th>
+                </tr>
+            </thead>
+            <tbody>
+                $rows
+            </tbody>
+        </table>
+        <p>$($txt.Closing)</p>
+    </div>
+"@
 } else {
-    $lines = @("<div>$($txt.Greeting)</div><br><div>$($txt.IntroTextList)</div>")
+    $lines = @("$htmlHeader<div style='font-family:Segoe UI, sans-serif;'><div>$($txt.Greeting)</div><br><div>$($txt.IntroTextList)</div>")
     foreach ($d in $daysProcessed) {
         $dayStrRaw = $d.Day.ToString("dddd dd/MM", $culture)
         $dayStr = $dayStrRaw.Substring(0,1).ToUpper() + $dayStrRaw.Substring(1)
@@ -141,13 +168,13 @@ if ($Formato -eq "Tabella") {
             if ($s.End -ge $d.Day.AddHours($config.WorkingHours.End)) { "$($txt.FromTimeText)$tS$($txt.InPoiText)" }
             else { "$($txt.FromTimeText)$tS$($txt.ToTimeText)$($s.End.ToString('HH.mm'))" }
         }
-        # CORREZIONE: Uso ${dayStr} qui per risolvere l'errore segnalato
-        $lines += "<div><b>${dayStr}:</b> $($parts -join $txt.OrText)</div>"
+        $lines += "<div style='margin-bottom:5px;'><b>${dayStr}:</b> $($parts -join $txt.OrText)</div>"
     }
-    $lines += "<br><div>$($txt.Closing)</div>"
+    $lines += "<br><div>$($txt.Closing)</div></div>"
     $mailBody = $lines -join ""
 }
 
+# ---- 6. OUTPUT ----
 $mail = $outlook.CreateItem(0)
 $mail.Subject = $txt.MailSubject
 $mail.HTMLBody = $mailBody
