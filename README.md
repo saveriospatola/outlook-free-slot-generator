@@ -39,6 +39,21 @@ Best for quick replies, simplified communication, or mobile-friendly viewing.
 
 ---
 
+## 💡 Pro Tips & Customization
+
+### Desktop Shortcuts & UI Optimization
+For a cleaner experience, it is highly recommended to create **Desktop Shortcuts** for your `.bat` files:
+
+1. **Create Shortcut**: Right-click on the `.bat` file > *Send to* > *Desktop (create shortcut)*.
+2. **Hide Terminal Window**: 
+   * Right-click the new Desktop Shortcut > *Properties*.
+   * In the **Run** dropdown menu, select **Minimized**. This will prevent the DOS/PowerShell window from popping up in front of you during execution.
+3. **Custom Icons**:
+   * While in *Properties*, click **Change Icon...**.
+   * You can select a system icon (like a calendar or mail icon) to make the launchers easily recognizable on your desktop.
+
+---
+
 ## ⚙️ Configuration
 Open `config.json` to customize the tool. You can define your working routine and localization settings:
 
